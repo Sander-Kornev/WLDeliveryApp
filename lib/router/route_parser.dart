@@ -6,7 +6,7 @@ class RouteParser extends RouteInformationParser<PageConfiguration> {
   @override
   Future<PageConfiguration> parseRouteInformation(
       RouteInformation routeInformation) async {
-    final uri = Uri.parse(routeInformation.location);
+    final uri = Uri.parse(routeInformation.location!);
     if (uri.pathSegments.isEmpty) {
       return LoginPageConfig;
     }

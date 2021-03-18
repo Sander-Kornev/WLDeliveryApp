@@ -1,4 +1,5 @@
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wl_delivery/ui/login/login.dart';
@@ -8,7 +9,7 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<PageConfiguration> {
 
   // 3
-  final List<Page> _pages = [];
+  final List<MaterialPage> _pages = [];
 
   // 4
   @override
@@ -16,7 +17,9 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
 
   // 5
   @override
-  GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
+
+  GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   bool _onPopPage(Route<dynamic> route, result) {
     // 1
@@ -42,9 +45,7 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void _removePage(MaterialPage page) {
-    if (page != null) {
-      _pages.remove(page);
-    }
+    _pages.remove(page);
     notifyListeners();
   }
 
@@ -60,7 +61,7 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
   MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
     return MaterialPage(
         child: child,
-        key: Key(pageConfig.key),
+        // key: Key(pageConfig.key),
         name: pageConfig.path,
         arguments: pageConfig
     );
@@ -102,7 +103,7 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
     addPage(newRoute);
   }
 
-  void setPath(List<Page> path) {
+  void setPath(List<MaterialPage> path) {
     _pages.clear();
     _pages.addAll(path);
     notifyListeners();
@@ -128,7 +129,7 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
     return SynchronousFuture(null);
   }
 
-  Page _getPage(Pages routeName) {
+  MaterialPage _getPage(Pages routeName) {
     return _pages.lastWhere((element) =>
     (element.arguments as PageConfiguration).uiPage == routeName);
   }
@@ -187,4 +188,37 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
   void remove(Pages routeName) {
     _removePage(_getPage(routeName));
   }
+
+  void openOkDialog(String label) {
+    showOkAlertDialog(
+        context: _navigatorKey.currentContext!,
+        title: label,
+        okLabel: 'Ok'
+    );
+  }
+
+  void showLoaderDialog() {
+    showDialog(
+        barrierDismissible: false,
+        useSafeArea: false,
+        context: _navigatorKey.currentContext!,
+        builder: (_) {
+          return Stack(
+            children: [
+              Opacity(
+                opacity: 0.1,
+                child: ModalBarrier(dismissible: false, color: Colors.black),
+              ),
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          );
+        });
+  }
+
+  void hideLoader() {
+    Navigator.pop(_navigatorKey.currentContext!);
+  }
+
 }

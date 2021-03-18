@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
 import 'package:wl_delivery/router/back_dispatcher.dart';
 import 'package:wl_delivery/router/route_parser.dart';
 import 'package:wl_delivery/router/router_delegate.dart';
 import 'package:wl_delivery/router/ui_pages.dart';
+
+import 'model/logic/auth_store.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +21,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final delegate = AppRouterDelegate();
   final parser = RouteParser();
-  MyBackButtonDispatcher backButtonDispatcher;
+  MyBackButtonDispatcher? backButtonDispatcher;
+  late AuthStoreCubit authStore;
+
+  // BlocListener<AuthStoreCubit, AuthState>? listener;
 
   // StreamSubscription _linkSubscription;
 
@@ -25,6 +32,16 @@ class _MyAppState extends State<MyApp> {
     delegate.setNewRoutePath(LoginPageConfig);
     backButtonDispatcher = MyBackButtonDispatcher(delegate);
     Get.put(delegate);
+    authStore = AuthStoreCubit();
+    Get.put(APIManager(authStore: authStore));
+    Get.put(authStore);
+
+    // listener = BlocListener<AuthStoreCubit, AuthState>(
+    //     bloc: authStore,
+    //     listener: (context, state) {
+    //       print('1' + state.toString());
+    //     }
+    // );
     // Get.put(CartHolder());
   }
 
@@ -55,30 +72,31 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Navigation App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          pageTransitionsTheme: const PageTransitionsTheme(builders: <TargetPlatform, PageTransitionsBuilder>{
-            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-          })
+    return BlocProvider(
+      create: (_) => authStore,
+      child: BlocListener<AuthStoreCubit, AuthState>(
+        listener: (context, state) {
+          print('2' + state.toString());
+        },
+        child: MaterialApp.router(
+          title: 'Navigation App',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+              pageTransitionsTheme: const PageTransitionsTheme(
+                  builders: <TargetPlatform, PageTransitionsBuilder>{
+                    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+                  })),
+          backButtonDispatcher: backButtonDispatcher,
+          routerDelegate: delegate,
+          routeInformationParser: parser,
+        ),
       ),
-      backButtonDispatcher: backButtonDispatcher,
-      routerDelegate: delegate,
-      routeInformationParser: parser,
     );
-
-
-    // return MaterialApp(
-    //   title: 'Welcome to Flutter',
-    //   theme: ThemeData(primaryColor: Colors.white),
-    //   home: ListItems(),
-    // );
   }
 }

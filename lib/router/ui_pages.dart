@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 
 const String SplashPath = '/splash';
 const String LoginPath = '/login';
@@ -26,7 +25,7 @@ class PageConfiguration {
   final Pages uiPage;
 
   const PageConfiguration(
-      {@required this.key, @required this.path, @required this.uiPage});
+      {required this.key, required this.path, required this.uiPage});
 }
 
 const PageConfiguration SplashPageConfig =
