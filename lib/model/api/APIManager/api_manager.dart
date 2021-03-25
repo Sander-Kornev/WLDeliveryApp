@@ -2,17 +2,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:wl_delivery/model/api/APIManager/api_constants.dart';
 import 'package:wl_delivery/model/api/APIRequest/api_request.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:wl_delivery/model/logic/auth_store.dart';
+import 'package:wl_delivery/model/repository/auth_repository.dart';
 
 class APIManager {
 
-  AuthStoreCubit authStore;
-  APIManager({required this.authStore});
+  AuthRepository authReceivedDelegate;
+  APIManager({required this.authReceivedDelegate});
 
   Future<Map> performRequest(APIRequest request) async {
 
@@ -22,7 +21,7 @@ class APIManager {
     };
 
     if (request.isWithToken) {
-      final token = await authStore.accessToken;
+      final token = await authReceivedDelegate.accessToken;
       headers[HttpHeaders.authorizationHeader] = "Bearer $token";
     } else if (request.credentials != null) {
       headers[HttpHeaders.authorizationHeader] = _basicAuthHeader(request.credentials!);
@@ -46,10 +45,10 @@ class APIManager {
     }
     _printRequest(response.request);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final mapValue = jsonDecode(response.body);
       if (request.containsAuthInfo) {
-        authStore.login(mapValue);
+        authReceivedDelegate.authInfoReceived(mapValue);
       }
       return mapValue;
     } else {

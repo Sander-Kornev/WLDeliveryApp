@@ -1,8 +1,14 @@
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:wl_delivery/ui/bottom_navigation_bar/my_navigation_bar.dart';
 import 'package:wl_delivery/ui/login/login.dart';
+import 'package:wl_delivery/ui/login/login_bloc_context.dart';
+import 'package:wl_delivery/ui/login/login_cubit.dart';
+import 'package:wl_delivery/ui/signup/signup.dart';
+import 'package:wl_delivery/ui/signup/signup_cubit.dart';
+import 'package:wl_delivery/ui/splash.dart';
+import 'bloc_common/bloc_provider.dart';
 import 'ui_pages.dart';
 
 class AppRouterDelegate extends RouterDelegate<PageConfiguration>
@@ -86,8 +92,32 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
             pageConfig.uiPage;
     if (shouldAddPage) {
       switch (pageConfig.uiPage) {
+        case Pages.Splash:
+          _addPageData(
+              Splash(),
+              SplashPageConfig
+          );
+          break;
         case Pages.Login:
-          _addPageData(Login(), LoginPageConfig);
+          _addPageData(
+              BlocProviderObj(
+                child: Login(),
+                bloc: LoginCubit(),
+                blocContext: LoginBlocContext(this),
+              ),
+              LoginPageConfig);
+          break;
+        case Pages.Signup:
+          _addPageData(
+              BlocProviderObj(
+                child: Signup(),
+                bloc: SignupCubit(),
+                blocContext: SignupContextBase(),
+              ),
+              LoginPageConfig);
+          break;
+        case Pages.NavigationBar:
+          _addPageData(MyNavigationBar(Key("key")), NavigationBarPageConfig);
           break;
         default:
           break;
@@ -187,38 +217,6 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void remove(Pages routeName) {
     _removePage(_getPage(routeName));
-  }
-
-  void openOkDialog(String label) {
-    showOkAlertDialog(
-        context: _navigatorKey.currentContext!,
-        title: label,
-        okLabel: 'Ok'
-    );
-  }
-
-  void showLoaderDialog() {
-    showDialog(
-        barrierDismissible: false,
-        useSafeArea: false,
-        context: _navigatorKey.currentContext!,
-        builder: (_) {
-          return Stack(
-            children: [
-              Opacity(
-                opacity: 0.1,
-                child: ModalBarrier(dismissible: false, color: Colors.black),
-              ),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          );
-        });
-  }
-
-  void hideLoader() {
-    Navigator.pop(_navigatorKey.currentContext!);
   }
 
 }

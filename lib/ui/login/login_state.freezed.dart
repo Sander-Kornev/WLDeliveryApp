@@ -13,8 +13,8 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-class _$LoginValidationErrorTearOff {
-  const _$LoginValidationErrorTearOff();
+class _$LoginStateTearOff {
+  const _$LoginStateTearOff();
 
   _LoginValidationError call(
       {String? emailValidationError, String? passwordValidationError}) {
@@ -26,34 +26,33 @@ class _$LoginValidationErrorTearOff {
 }
 
 /// @nodoc
-const $LoginValidationError = _$LoginValidationErrorTearOff();
+const $LoginState = _$LoginStateTearOff();
 
 /// @nodoc
-mixin _$LoginValidationError {
+mixin _$LoginState {
   String? get emailValidationError => throw _privateConstructorUsedError;
   String? get passwordValidationError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $LoginValidationErrorCopyWith<LoginValidationError> get copyWith =>
+  $LoginStateCopyWith<LoginState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LoginValidationErrorCopyWith<$Res> {
-  factory $LoginValidationErrorCopyWith(LoginValidationError value,
-          $Res Function(LoginValidationError) then) =
-      _$LoginValidationErrorCopyWithImpl<$Res>;
+abstract class $LoginStateCopyWith<$Res> {
+  factory $LoginStateCopyWith(
+          LoginState value, $Res Function(LoginState) then) =
+      _$LoginStateCopyWithImpl<$Res>;
   $Res call({String? emailValidationError, String? passwordValidationError});
 }
 
 /// @nodoc
-class _$LoginValidationErrorCopyWithImpl<$Res>
-    implements $LoginValidationErrorCopyWith<$Res> {
-  _$LoginValidationErrorCopyWithImpl(this._value, this._then);
+class _$LoginStateCopyWithImpl<$Res> implements $LoginStateCopyWith<$Res> {
+  _$LoginStateCopyWithImpl(this._value, this._then);
 
-  final LoginValidationError _value;
+  final LoginState _value;
   // ignore: unused_field
-  final $Res Function(LoginValidationError) _then;
+  final $Res Function(LoginState) _then;
 
   @override
   $Res call({
@@ -75,7 +74,7 @@ class _$LoginValidationErrorCopyWithImpl<$Res>
 
 /// @nodoc
 abstract class _$LoginValidationErrorCopyWith<$Res>
-    implements $LoginValidationErrorCopyWith<$Res> {
+    implements $LoginStateCopyWith<$Res> {
   factory _$LoginValidationErrorCopyWith(_LoginValidationError value,
           $Res Function(_LoginValidationError) then) =
       __$LoginValidationErrorCopyWithImpl<$Res>;
@@ -85,7 +84,7 @@ abstract class _$LoginValidationErrorCopyWith<$Res>
 
 /// @nodoc
 class __$LoginValidationErrorCopyWithImpl<$Res>
-    extends _$LoginValidationErrorCopyWithImpl<$Res>
+    extends _$LoginStateCopyWithImpl<$Res>
     implements _$LoginValidationErrorCopyWith<$Res> {
   __$LoginValidationErrorCopyWithImpl(
       _LoginValidationError _value, $Res Function(_LoginValidationError) _then)
@@ -126,14 +125,14 @@ class _$_LoginValidationError extends _LoginValidationError
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'LoginValidationError(emailValidationError: $emailValidationError, passwordValidationError: $passwordValidationError)';
+    return 'LoginState(emailValidationError: $emailValidationError, passwordValidationError: $passwordValidationError)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'LoginValidationError'))
+      ..add(DiagnosticsProperty('type', 'LoginState'))
       ..add(DiagnosticsProperty('emailValidationError', emailValidationError))
       ..add(DiagnosticsProperty(
           'passwordValidationError', passwordValidationError));
@@ -165,7 +164,7 @@ class _$_LoginValidationError extends _LoginValidationError
           this, _$identity);
 }
 
-abstract class _LoginValidationError extends LoginValidationError {
+abstract class _LoginValidationError extends LoginState {
   factory _LoginValidationError(
       {String? emailValidationError,
       String? passwordValidationError}) = _$_LoginValidationError;

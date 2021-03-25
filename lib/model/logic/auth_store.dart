@@ -1,13 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-abstract class AuthState {}
-class UnknownAuthState extends AuthState {}
-class LoggedInAuthState extends AuthState {}
-class LoggedOutAuthState extends AuthState {}
 
 class AuthModel {
   final int expiresIn;
@@ -32,7 +26,7 @@ class AuthModel {
 }
 
 
-class AuthStoreCubit extends Cubit<AuthState> {
+class AuthStore {
 
   static const authModelKey = 'authModel';
 
@@ -52,8 +46,6 @@ class AuthStoreCubit extends Cubit<AuthState> {
 
   AuthModel? _authModel;
 
-  AuthStoreCubit(): super(UnknownAuthState());
-
   Future<String?> get accessToken async {
     return (await authModel)?.accessToken;
   }
@@ -63,17 +55,15 @@ class AuthStoreCubit extends Cubit<AuthState> {
   }
 
   login(Map info) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     _authModel = AuthModel.fromJson(info);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(authModelKey, jsonEncode(info));
-    emit(LoggedInAuthState());
   }
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _authModel = null;
     prefs.remove(authModelKey);
-    emit(LoggedOutAuthState());
   }
-
 }

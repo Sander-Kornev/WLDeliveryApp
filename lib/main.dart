@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
+import 'package:wl_delivery/model/db/models/user.dart';
 import 'package:wl_delivery/router/back_dispatcher.dart';
 import 'package:wl_delivery/router/route_parser.dart';
 import 'package:wl_delivery/router/router_delegate.dart';
 import 'package:wl_delivery/router/ui_pages.dart';
+import 'package:wl_delivery/model/repository/auth_repository.dart';
 
-import 'model/logic/auth_store.dart';
+const String boxName = "db";
 
-void main() {
+void main() async {
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAdapter());
+  await Hive.openBox<User>(boxName);
+
   runApp(MyApp());
 }
 
@@ -22,61 +32,48 @@ class _MyAppState extends State<MyApp> {
   final delegate = AppRouterDelegate();
   final parser = RouteParser();
   MyBackButtonDispatcher? backButtonDispatcher;
-  late AuthStoreCubit authStore;
-
-  // BlocListener<AuthStoreCubit, AuthState>? listener;
-
-  // StreamSubscription _linkSubscription;
+  late AuthRepository authRepository;
 
   _MyAppState() {
-    delegate.setNewRoutePath(LoginPageConfig);
     backButtonDispatcher = MyBackButtonDispatcher(delegate);
-    Get.put(delegate);
-    authStore = AuthStoreCubit();
-    Get.put(APIManager(authStore: authStore));
-    Get.put(authStore);
 
-    // listener = BlocListener<AuthStoreCubit, AuthState>(
-    //     bloc: authStore,
-    //     listener: (context, state) {
-    //       print('1' + state.toString());
-    //     }
-    // );
-    // Get.put(CartHolder());
+    authRepository = AuthRepository();
+    final apiManager = APIManager(authReceivedDelegate: authRepository);
+    authRepository.apiManager = apiManager;
+    Get.put(apiManager);
+    Get.put(authRepository);
+    delegate.setNewRoutePath(SplashPageConfig);
+    Get.put(delegate);
   }
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    // initPlatformState();
+
+    initPlatformState();
   }
-  //
-  // @override
-  // void dispose() {
-  //   if (_linkSubscription != null) _linkSubscription.cancel();
-  //   super.dispose();
-  // }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  // Future<void> initPlatformState() async {
-  //   // Attach a listener to the Uri links stream
-  //   _linkSubscription = getUriLinksStream().listen((Uri uri) {
-  //     if (!mounted) return;
-  //     setState(() {
-  //       delegate.parseRoute(uri);
-  //     });
-  //   }, onError: (Object err) {
-  //     print('Got error $err');
-  //   });
-  // }
+  initPlatformState() async {
+
+    if ((await authRepository.accessToken) == null) {
+      delegate.setNewRoutePath(LoginPageConfig);
+    } else {
+      delegate.setNewRoutePath(NavigationBarPageConfig);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => authStore,
-      child: BlocListener<AuthStoreCubit, AuthState>(
+      create: (_) => authRepository,
+      child: BlocListener<AuthRepository, AuthState>(
         listener: (context, state) {
-          print('2' + state.toString());
+          if (state is LoggedInAuthState) {
+            delegate.setNewRoutePath(LoginPageConfig);
+          } else {
+            delegate.setNewRoutePath(NavigationBarPageConfig);
+          }
         },
         child: MaterialApp.router(
           title: 'Navigation App',

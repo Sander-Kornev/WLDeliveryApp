@@ -1,74 +1,195 @@
 
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
-
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
-import 'package:wl_delivery/model/api/APIRequest/api_request.dart';
 import 'package:wl_delivery/model/api/APIRequest/requests/request+auth.dart';
-import 'package:wl_delivery/model/api/APIRequest/requests/request+user.dart';
-import 'package:wl_delivery/router/router_delegate.dart';
+import 'package:wl_delivery/router/bloc_common/bloc_base.dart';
+import 'package:wl_delivery/router/bloc_common/bloc_context_base.dart';
 
+import '../../model/repository/auth_repository.dart';
 import 'login_state.dart';
 
-class LoginCubit extends Cubit<LoginState> {
+enum LoginBlocEvent {
+  signup
+}
 
+class LoginCubit extends BlocBaseObj<LoginState, LoginBlocEvent> {
+
+  final authRepository = Get.find<AuthRepository>();
   final apiManager = Get.find<APIManager>();
-  final delegate = Get.find<AppRouterDelegate>();
 
   String? _email;
   String? _password;
 
-  LoginCubit() : super(LoginWaitingState());
+  LoginCubit() : super(LoginState());
 
-  void login() async {
+  // ACTIONS
+  login() async {
 
     final emailError = _validateEmail(_email);
     final passwordError = _validatePassword(_password);
 
     if (emailError != null || passwordError != null) {
-      emit(LoginValidationError(emailValidationError: emailError, passwordValidationError: passwordError));
+      emit(LoginState(emailValidationError: emailError, passwordValidationError: passwordError));
       return;
     }
 
     try {
-      emit(LoginWaitingState());
-      delegate.showLoaderDialog();
-      final authRequest = AuthAPI.login(email: _email, password: _password);
-      final authResult = await apiManager.performRequest(authRequest);
-      print(authResult);
-      final userRequest = UserAPI.userInfo;
-      final userInfo = await apiManager.performRequest(userRequest);
-      print(userInfo);
-      delegate.hideLoader();
-      emit(LoginSuccessState());
+      inLoadingEvents.add(true);
+      await authRepository.login(email: _email!, password: _password!);
+      inLoadingEvents.add(false);
     } catch (_) {
-      delegate.hideLoader();
-      delegate.openOkDialog('Error occured');
+      inLoadingEvents.add(false);
+      inMessageEvents.add('Error occured');
     }
   }
 
-  void setEmail(String? value) {
+  fbLogin() async {
+
+    inLoadingEvents.add(true);
+
+    try {
+
+      // by default the login method has the next permissions ['email','public_profile']
+      AccessToken accessToken = await FacebookAuth.instance.login();
+      print(accessToken.toJson());
+      // get the user data
+      final userData = await FacebookAuth.instance.getUserData(fields: "email,first_name,last_name");
+
+      print(userData);
+
+      final firstName = userData["first_name"] as String? ?? '';
+      final lastName = userData["last_name"] as String? ?? '';
+      final email = userData["email"] as String? ?? '';
+      final id = userData["id"] as String? ?? '';
+
+      await authRepository.socialLogin(
+          id: id,
+          email: email,
+          fullName: "$firstName $lastName",
+          type: LoginSocialType.FB()
+      );
+      inLoadingEvents.add(false);
+
+    } on FacebookAuthException catch (e) {
+      inLoadingEvents.add(false);
+      switch (e.errorCode) {
+        case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
+          print("You have a previous login operation in progress");
+          break;
+        case FacebookAuthErrorCode.CANCELLED:
+          inMessageEvents.add('Login cancelled');
+          break;
+        case FacebookAuthErrorCode.FAILED:
+          inMessageEvents.add('Login failed');
+          break;
+      }
+    } catch (err) {
+      inLoadingEvents.add(false);
+      print(err.toString());
+      // delegate.openOkDialog('Error occured');
+    } finally {
+      inLoadingEvents.add(false);
+    }
+  }
+
+  signInWithApple() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        // TODO: Remove these if you have no need for them
+        nonce: 'example-nonce',
+        state: 'example-state',
+      );
+
+      print(credential);
+
+      // This is the endpoint that will convert an authorization code obtained
+      // via Sign in with Apple into a session in your system
+      String fullName = '';
+      final id = credential.authorizationCode;
+      if (credential.givenName != null) {
+        fullName += credential.givenName!;
+      }
+      if (credential.familyName != null) {
+        fullName += credential.familyName!;
+      }
+
+      inLoadingEvents.add(true);
+      await authRepository.socialLogin(
+          id: id,
+          email: credential.email,
+          fullName: fullName,
+          type: LoginSocialType.Apple()
+      );
+      inLoadingEvents.add(false);
+    } catch (err) {
+      print(err.toString());
+      inLoadingEvents.add(false);
+    }
+
+    // If we got this far, a session based on the Apple ID credential has been created in your system,
+    // and you can now set this as the app's session
+  }
+
+  signup() {
+    inEvents.add(BlocEvent(type: LoginBlocEvent.signup));
+  }
+
+  // FORGOT PASSWORD
+  forgotPassword() {
+
+    DialogTextField textField = DialogTextField(
+        keyboardType: TextInputType.emailAddress,
+        hintText: "Email",
+        validator: _validateEmail
+    );
+    TextMessageAlert textAlert = TextMessageAlert(
+        [textField],
+        "Forgot Password",
+        "Please enter your email",
+        'Send',
+        _sendForgotPassword
+    );
+    inTextAlertController.add(textAlert);
+  }
+
+  _sendForgotPassword(String? email) async {
+    if (email == null) {
+      return;
+    }
+
+    try {
+      inLoadingEvents.add(true);
+      final request = AuthAPI.forgotPassword(email: email);
+      final result = await apiManager.performRequest(request);
+      print(result);
+      inLoadingEvents.add(false);
+      inMessageEvents.add('Confirmation email was sent');
+    } catch (err) {
+      print(err.toString());
+      inLoadingEvents.add(false);
+      inMessageEvents.add('Error occured');
+    }
+  }
+
+  // SETTERS
+  setEmail(String? value) {
     _email = value;
-    if (this.state is LoginValidationError) {
-      var newState = (this.state as LoginValidationError).copyWith(emailValidationError: null);
-      if (newState.isEmpty) {
-        emit(LoginWaitingState());
-      } else {
-        emit(newState);
-      }
-    }
+    var newState = this.state.copyWith(emailValidationError: null);
+    emit(newState);
   }
 
-  void setPassword(String? value) {
+  setPassword(String? value) {
     _password = value;
-    if (this.state is LoginValidationError) {
-      var newState = (this.state as LoginValidationError).copyWith(passwordValidationError: null);
-      if (newState.isEmpty) {
-        emit(LoginWaitingState());
-      } else {
-        emit(newState);
-      }
-    }
+    var newState = this.state.copyWith(passwordValidationError: null);
+    emit(newState);
   }
 
   String? _validateEmail(String? value) {

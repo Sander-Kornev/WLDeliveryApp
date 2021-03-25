@@ -17,10 +17,10 @@ class RouteParser extends RouteInformationParser<PageConfiguration> {
         return SplashPageConfig;
       case LoginPath:
         return LoginPageConfig;
-      case CreateAccountPath:
-        return CreateAccountPageConfig;
-      case ListItemsPath:
-        return ListItemsPageConfig;
+      case SignupPath:
+        return SignupPageConfig;
+      case NavigationBarPath:
+        return NavigationBarPageConfig;
       case DetailsPath:
         return DetailsPageConfig;
       case CartPath:
@@ -41,10 +41,10 @@ class RouteParser extends RouteInformationParser<PageConfiguration> {
         return const RouteInformation(location: SplashPath);
       case Pages.Login:
         return const RouteInformation(location: LoginPath);
-      case Pages.CreateAccount:
-        return const RouteInformation(location: CreateAccountPath);
-      case Pages.List:
-        return const RouteInformation(location: ListItemsPath);
+      case Pages.Signup:
+        return const RouteInformation(location: SignupPath);
+      case Pages.NavigationBar:
+        return const RouteInformation(location: NavigationBarPath);
       case Pages.Details:
         return const RouteInformation(location: DetailsPath);
       case Pages.Cart:
