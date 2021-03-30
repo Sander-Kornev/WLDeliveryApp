@@ -8,7 +8,6 @@ import 'package:wl_delivery/ui/login/login_cubit.dart';
 class LoginBlocContext extends BlocContextBase<LoginCubit> {
 
   AppRouterDelegate router;
-
   LoginBlocContext(this.router);
 
   @override
@@ -17,6 +16,9 @@ class LoginBlocContext extends BlocContextBase<LoginCubit> {
       switch (event.type) {
         case LoginBlocEvent.signup:
           router.push(SignupPageConfig);
+          break;
+        case LoginBlocEvent.guestAuth:
+          router.setNewRoutePath(NavigationBarPageConfig);
           break;
         default:
           assert(false, "Should never reach there");

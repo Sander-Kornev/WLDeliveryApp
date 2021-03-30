@@ -2,6 +2,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'bloc_base.dart';
 
@@ -68,6 +69,15 @@ abstract class BlocContextBase<T extends BlocBase> {
           okLabel: textAlert.okLabel
       );
       textAlert.completion(results?.first);
+    });
+  }
+
+  void subscribeModalPresentation(T bloc, BuildContext context) {
+    (bloc as BlocBaseObj).outModalController.listen((Widget widget) async {
+      showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) => widget,
+      );
     });
   }
 }

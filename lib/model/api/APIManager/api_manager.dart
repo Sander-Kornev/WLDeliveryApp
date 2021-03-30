@@ -10,7 +10,7 @@ import 'package:wl_delivery/model/repository/auth_repository.dart';
 
 class APIManager {
 
-  AuthRepository authReceivedDelegate;
+  AuthRepositoryProtocol authReceivedDelegate;
   APIManager({required this.authReceivedDelegate});
 
   Future<Map> performRequest(APIRequest request) async {

@@ -27,6 +27,7 @@ class _BlocProviderState<T extends BlocBase> extends State<BlocProviderObj<BlocB
     widget.blocContext.subscribeProgress(widget.bloc, context);
     widget.blocContext.subscribeMessage(widget.bloc, context);
     widget.blocContext.subscribeTextMessage(widget.bloc, context);
+    widget.blocContext.subscribeModalPresentation(widget.bloc, context);
   }
 
   @override

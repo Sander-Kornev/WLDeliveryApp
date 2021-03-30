@@ -17,7 +17,7 @@ class UserAdapter extends TypeAdapter<User> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return User(
-      id: fields[2] as String,
+      id: fields[2] as int,
       fullname: fields[0] as String,
       email: fields[1] as String,
     );

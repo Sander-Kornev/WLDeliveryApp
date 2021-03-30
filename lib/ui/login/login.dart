@@ -22,13 +22,14 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final LoginCubit userCubit = BlocProvider.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: userCubit.guestAuth,
             child: Text(
               "Continue as guest",
               style: TextStyle(
@@ -178,7 +179,7 @@ class LoginForm extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all(Colors.blue),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                     ),
@@ -196,6 +197,7 @@ class LoginForm extends StatelessWidget {
                   ),
                   if (Platform.isIOS)
                     SignInWithAppleButton(
+                        height: 50,
                         onPressed: () => userCubit.signInWithApple()
                     ),
                 ],

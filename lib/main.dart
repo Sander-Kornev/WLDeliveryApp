@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
+import 'package:wl_delivery/model/db/db_provider.dart';
 import 'package:wl_delivery/model/db/models/user.dart';
 import 'package:wl_delivery/router/back_dispatcher.dart';
 import 'package:wl_delivery/router/route_parser.dart';
@@ -19,6 +20,12 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
   await Hive.openBox<User>(boxName);
+  
+  final dbPath = await DBProvider.initDB('app.db');
+  final dbProvider = DBProvider();
+  await dbProvider.open(dbPath);
+
+  Get.put(dbProvider);
 
   runApp(MyApp());
 }
@@ -70,9 +77,9 @@ class _MyAppState extends State<MyApp> {
       child: BlocListener<AuthRepository, AuthState>(
         listener: (context, state) {
           if (state is LoggedInAuthState) {
-            delegate.setNewRoutePath(LoginPageConfig);
-          } else {
             delegate.setNewRoutePath(NavigationBarPageConfig);
+          } else {
+            delegate.setNewRoutePath(LoginPageConfig);
           }
         },
         child: MaterialApp.router(

@@ -1,10 +1,12 @@
 
+import 'package:flutter/material.dart';
+
 const String SplashPath = '/splash';
 const String LoginPath = '/login';
 const String SignupPath = '/signup';
 const String NavigationBarPath = '/navigationBar';
-const String DetailsPath = '/details';
-const String CartPath = '/cart';
+const String EditProfilePath = '/editProfile';
+const String ChangePasswordPath = '/changePassword';
 const String CheckoutPath = '/checkout';
 const String SettingsPath = '/settings';
 
@@ -13,8 +15,8 @@ enum Pages {
   Login,
   Signup,
   NavigationBar,
-  Details,
-  Cart,
+  EditProfile,
+  ChangePassword,
   Checkout,
   Settings
 }
@@ -36,11 +38,10 @@ const PageConfiguration SignupPageConfig = PageConfiguration(
     key: 'Signup', path: SignupPath, uiPage: Pages.Signup);
 const PageConfiguration NavigationBarPageConfig = PageConfiguration(
     key: 'NavigationBar', path: NavigationBarPath, uiPage: Pages.NavigationBar);
-
-const PageConfiguration DetailsPageConfig =
-    PageConfiguration(key: 'Details', path: DetailsPath, uiPage: Pages.Details);
-const PageConfiguration CartPageConfig =
-    PageConfiguration(key: 'Cart', path: CartPath, uiPage: Pages.Cart);
+const PageConfiguration EditProfilePageConfig =
+    PageConfiguration(key: 'Edit Profile', path: EditProfilePath, uiPage: Pages.EditProfile);
+const PageConfiguration ChangePasswordPageConfig =
+    PageConfiguration(key: 'Change Password', path: ChangePasswordPath, uiPage: Pages.ChangePassword);
 const PageConfiguration CheckoutPageConfig = PageConfiguration(
     key: 'Checkout', path: CheckoutPath, uiPage: Pages.Checkout);
 const PageConfiguration SettingsPageConfig = PageConfiguration(

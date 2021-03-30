@@ -13,7 +13,8 @@ import '../../model/repository/auth_repository.dart';
 import 'login_state.dart';
 
 enum LoginBlocEvent {
-  signup
+  signup,
+  guestAuth
 }
 
 class LoginCubit extends BlocBaseObj<LoginState, LoginBlocEvent> {
@@ -51,13 +52,14 @@ class LoginCubit extends BlocBaseObj<LoginState, LoginBlocEvent> {
 
     inLoadingEvents.add(true);
 
-    try {
-
-      // by default the login method has the next permissions ['email','public_profile']
-      AccessToken accessToken = await FacebookAuth.instance.login();
+    final LoginResult result = await FacebookAuth.instance.login(); // by the fault we request the email and the public profile
+    if (result.status == LoginStatus.success) {
+      // you are logged
+      final AccessToken accessToken = result.accessToken!;
       print(accessToken.toJson());
-      // get the user data
-      final userData = await FacebookAuth.instance.getUserData(fields: "email,first_name,last_name");
+
+      final userData = await FacebookAuth.instance
+          .getUserData(fields: "email,first_name,last_name");
 
       print(userData);
 
@@ -66,32 +68,18 @@ class LoginCubit extends BlocBaseObj<LoginState, LoginBlocEvent> {
       final email = userData["email"] as String? ?? '';
       final id = userData["id"] as String? ?? '';
 
-      await authRepository.socialLogin(
-          id: id,
-          email: email,
-          fullName: "$firstName $lastName",
-          type: LoginSocialType.FB()
-      );
-      inLoadingEvents.add(false);
-
-    } on FacebookAuthException catch (e) {
-      inLoadingEvents.add(false);
-      switch (e.errorCode) {
-        case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
-          print("You have a previous login operation in progress");
-          break;
-        case FacebookAuthErrorCode.CANCELLED:
-          inMessageEvents.add('Login cancelled');
-          break;
-        case FacebookAuthErrorCode.FAILED:
-          inMessageEvents.add('Login failed');
-          break;
+      try {
+        await authRepository.socialLogin(
+            id: id,
+            email: email,
+            fullName: "$firstName $lastName",
+            type: LoginSocialType.FB());
+        inLoadingEvents.add(false);
+      } catch (err) {
+        inLoadingEvents.add(false);
+        print(err.toString());
       }
-    } catch (err) {
-      inLoadingEvents.add(false);
-      print(err.toString());
-      // delegate.openOkDialog('Error occured');
-    } finally {
+    } else {
       inLoadingEvents.add(false);
     }
   }
@@ -113,11 +101,12 @@ class LoginCubit extends BlocBaseObj<LoginState, LoginBlocEvent> {
       // This is the endpoint that will convert an authorization code obtained
       // via Sign in with Apple into a session in your system
       String fullName = '';
-      final id = credential.authorizationCode;
+      final id = credential.userIdentifier;
       if (credential.givenName != null) {
         fullName += credential.givenName!;
       }
       if (credential.familyName != null) {
+        fullName += ' ';
         fullName += credential.familyName!;
       }
 
@@ -140,6 +129,10 @@ class LoginCubit extends BlocBaseObj<LoginState, LoginBlocEvent> {
 
   signup() {
     inEvents.add(BlocEvent(type: LoginBlocEvent.signup));
+  }
+
+  guestAuth() {
+    inEvents.add(BlocEvent(type: LoginBlocEvent.guestAuth));
   }
 
   // FORGOT PASSWORD

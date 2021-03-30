@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,10 +48,20 @@ abstract class BlocBaseObj<T, P> extends BlocBase<T> {
   Stream<TextMessageAlert> get outTextAlertController =>
       _textAlertController.stream;
 
+  StreamController<Widget> _modalController = StreamController<
+      Widget>();
+
+  @protected
+  Sink<Widget> get inModalController => _modalController.sink;
+
+  Stream<Widget> get outModalController =>
+      _modalController.stream;
+
   void dispose() {
     _eventsController.close();
     _loadingController.close();
     _messageController.close();
     _textAlertController.close();
+    _modalController.close();
   }
 }

@@ -13,6 +13,12 @@ class User extends HiveObject {
         email = json['email'],
         id = json['id'];
 
+  update(Map json) {
+    fullname = json['fullname'];
+    email = json['email'];
+    id = json['id'];
+  }
+
   @HiveField(0)
   String fullname;
 
@@ -20,5 +26,5 @@ class User extends HiveObject {
   String email;
 
   @HiveField(2)
-  String id;
+  int id;
 }

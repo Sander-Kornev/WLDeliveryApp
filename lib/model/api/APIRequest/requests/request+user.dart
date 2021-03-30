@@ -10,4 +10,28 @@ extension UserAPI on APIRequest {
 
     return request;
   }
+
+  static APIRequest changeUserInfo({fullname: String, email: String}) {
+
+    final request = APIRequest.PUT();
+    request.urlAdditionalPath = "/user/";
+    request.postParameters = {
+      "fullname": fullname,
+      "email": email
+    };
+
+    return request;
+  }
+
+  static APIRequest changePassword({oldPassword: String, newPassword: String}) {
+
+    final request = APIRequest.PUT();
+    request.urlAdditionalPath = "/user/change_password/";
+    request.postParameters = {
+      "old_password": oldPassword,
+      "new_password": newPassword
+    };
+
+    return request;
+  }
 }
