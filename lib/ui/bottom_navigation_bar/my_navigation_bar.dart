@@ -6,9 +6,9 @@ import 'package:wl_delivery/router/router_delegate.dart';
 import 'package:wl_delivery/ui/cart/cart_bloc_context.dart';
 import 'package:wl_delivery/ui/cart/cart_cubit.dart';
 import 'package:wl_delivery/ui/cart/cart_sceen.dart';
-import 'package:wl_delivery/ui/main/main_bloc_context.dart';
-import 'package:wl_delivery/ui/main/main_cubit.dart';
-import 'package:wl_delivery/ui/main/main_screen.dart';
+import 'package:wl_delivery/ui/main/restaurants/main_bloc_context.dart';
+import 'package:wl_delivery/ui/main/restaurants/main_cubit.dart';
+import 'package:wl_delivery/ui/main/restaurants/main_screen.dart';
 import 'package:wl_delivery/ui/orders/orders_bloc_context.dart';
 import 'package:wl_delivery/ui/orders/orders_cubit.dart';
 import 'package:wl_delivery/ui/orders/orders_screen.dart';
@@ -21,7 +21,7 @@ class MyHomePage extends StatefulWidget {
 
   final AppRouterDelegate routerDelegate;
 
-  late List<Widget> screens;
+  late final List<Widget> screens;
 
   MyHomePage(this.routerDelegate) {
     screens = [

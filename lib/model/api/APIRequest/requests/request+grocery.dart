@@ -21,7 +21,7 @@ extension EstablishmentAPI on APIRequest {
 
   static APIRequest getProducts(int categoryId) {
     final request = APIRequest.GET();
-    request.urlAdditionalPath = "/establishments/$categoryId/products/";
+    request.urlAdditionalPath = "/categories/$categoryId/products/";
     request.isWithToken = false;
 
     return request;

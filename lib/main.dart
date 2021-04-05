@@ -17,6 +17,9 @@ const String boxName = "db";
 
 void main() async {
 
+  // debugPaintPointersEnabled = true;
+  // debugPaintSizeEnabled = true;
+
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
   await Hive.openBox<User>(boxName);

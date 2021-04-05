@@ -144,6 +144,16 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
               ),
               ChangePasswordPageConfig);
           break;
+        case Pages.Products:
+          _addPageData(
+              BlocProviderObj(
+                child: ChangePassword(),
+                bloc: ChangePasswordCubit(),
+                blocContext: ChangePasswordContext(this),
+              ),
+              ChangePasswordPageConfig);
+          break;
+
         default:
           break;
       }

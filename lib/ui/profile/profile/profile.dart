@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wl_delivery/ui/profile/profile/profile_cubit.dart';
 import 'package:wl_delivery/ui/profile/profile/profile_state.dart';
+import 'package:wl_delivery/extensions/optional.dart';
 
-extension Extension on String? {
-  String get orEmpty {
-    return this == null ? '' : this!;
-  }
-}
+
 
 class Profile extends StatelessWidget {
   @override

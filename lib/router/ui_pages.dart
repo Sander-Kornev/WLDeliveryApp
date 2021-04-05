@@ -1,6 +1,4 @@
 
-import 'package:flutter/material.dart';
-
 const String SplashPath = '/splash';
 const String LoginPath = '/login';
 const String SignupPath = '/signup';
@@ -10,6 +8,9 @@ const String ChangePasswordPath = '/changePassword';
 const String CheckoutPath = '/checkout';
 const String SettingsPath = '/settings';
 
+const String CategoriesPath = '/categories';
+const String ProductsPath = '/products';
+
 enum Pages {
   Splash,
   Login,
@@ -18,7 +19,10 @@ enum Pages {
   EditProfile,
   ChangePassword,
   Checkout,
-  Settings
+  Settings,
+
+  Categories,
+  Products
 }
 
 class PageConfiguration {
@@ -46,3 +50,8 @@ const PageConfiguration CheckoutPageConfig = PageConfiguration(
     key: 'Checkout', path: CheckoutPath, uiPage: Pages.Checkout);
 const PageConfiguration SettingsPageConfig = PageConfiguration(
     key: 'Settings', path: SettingsPath, uiPage: Pages.Settings);
+
+const PageConfiguration CategoriesPageConfig = PageConfiguration(
+    key: 'Categories', path: CategoriesPath, uiPage: Pages.Categories);
+const PageConfiguration ProductsPageConfig = PageConfiguration(
+    key: 'Products', path: ProductsPath, uiPage: Pages.Products);

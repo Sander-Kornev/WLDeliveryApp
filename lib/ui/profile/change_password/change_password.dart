@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wl_delivery/ui/profile/edit_profile/edit_profile_cubit.dart';
 import 'change_password_cubit.dart';
 import 'change_password_state.dart';
 
