@@ -6,6 +6,7 @@ class Product extends SQLModelInsertable {
 
   String get tableName => tableProduct;
   static String get staticTableName => tableProduct;
+  int get hashCode => id;
 
   static String get createTable {
     return '''
@@ -30,7 +31,8 @@ class Product extends SQLModelInsertable {
       columnId: id,
       columnTitle: title,
       columnImage: image,
-      columnPrice: price
+      columnPrice: price,
+      columnCategoryId: categoryId
     };
     return map;
   }
@@ -50,4 +52,16 @@ class Product extends SQLModelInsertable {
     title = map[columnTitle] as String;
     image = map[columnImage] as String;
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Product && id == other.id;
+  }
+}
+
+class ProductCount {
+  final Product product;
+  final int count;
+
+  ProductCount(this.product, this.count);
 }

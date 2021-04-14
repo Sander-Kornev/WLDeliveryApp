@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wl_delivery/extensions/optional.dart';
-import 'package:wl_delivery/model/db/models/category.dart';
 import 'package:wl_delivery/model/db/models/product.dart';
 import 'package:wl_delivery/ui/common/list_state.dart';
 import 'package:wl_delivery/ui/main/products/products_cubit.dart';
 import 'package:wl_delivery/ui/main/widgets/grocery_header_widget.dart';
+import 'package:wl_delivery/ui/main/widgets/product_list_tile.dart';
 
 class ProductsScreen extends StatelessWidget {
   @override
@@ -16,6 +16,13 @@ class ProductsScreen extends StatelessWidget {
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: mainCubit.search,
+            icon: Icon(Icons.search),
+          )
+        ],
+        centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
           mainCubit.parentCategory.title.orEmpty,
@@ -25,7 +32,7 @@ class ProductsScreen extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: BlocBuilder<ProductsCubit, ListScreenState<Product>>(
+        child: BlocBuilder<ProductsCubit, ListScreenState<ProductCount>>(
           builder: (context, state) {
             if (state is Loading) {
               return CircularProgressIndicator();
@@ -44,63 +51,11 @@ class ProductsScreen extends StatelessWidget {
                   if (index == 0) {
                     return GroceryHeaderWidget(grocery: mainCubit.grocery);
                   } else {
-                    final value = loadedState.values[index - 1] as Product;
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(value.image.orEmpty),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children:
-                                [
-                                  Text(
-                                    value.title.orEmpty,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black),
-                                  ),
-                                  SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${value.price.toString()} \$',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
-                                      ),
-                                      // Spacer(),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.pink
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            TextButton(child: Text('-'), onPressed: (){},),
-                                            Text('count'),
-                                            TextButton(child: Text('+'), onPressed: (){},)
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ]
-                          ),
-                        ],
-                      ),
+                    final value = loadedState.values[index - 1] as ProductCount;
+                    return ProductListTile(
+                        productCount: value,
+                        removeAction: (() => mainCubit.remove(value.product)),
+                        addAction: (() => mainCubit.add(value.product))
                     );
                   }
                 }, separatorBuilder: (BuildContext context, int index) { return const Divider(height: 1,); },
@@ -113,3 +68,4 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 }
+

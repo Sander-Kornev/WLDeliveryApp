@@ -17,6 +17,11 @@ class GroceryRepository {
     return await dbProvider.getAllGroceries();
   }
 
+  Future<GroceryCafe?> getGrocery(int id) async {
+    return await dbProvider.findById(id, GroceryCafe.staticTableName, (x) => GroceryCafe.fromMap(x));
+  }
+
+
   Future<List<Category>?> getCategories(int groceryId, [int? parentCategoryId]) async {
     return await dbProvider.getCategories(groceryId, parentCategoryId);
   }
@@ -67,7 +72,6 @@ class GroceryRepository {
 
   Future<List<Product>> saveProducts(Map map, int categoryId) async {
 
-
     final batch = dbProvider.db.batch();
     await dbProvider.deleteAllProducts(categoryId, batch);
 
@@ -79,5 +83,9 @@ class GroceryRepository {
 
     await batch.commit();
     return objects;
+  }
+
+  Future<Product?> getProduct(int id) async {
+    return await dbProvider.findById(id, Product.staticTableName, (x) => Product.fromMap(x));
   }
 }

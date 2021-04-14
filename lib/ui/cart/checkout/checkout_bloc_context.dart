@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:wl_delivery/router/bloc_common/bloc_base.dart';
 import 'package:wl_delivery/router/bloc_common/bloc_context_base.dart';
 import 'package:wl_delivery/router/router_delegate.dart';
-import 'package:wl_delivery/ui/orders/orders_cubit.dart';
+import 'checkout_cubit.dart';
 
-class OrdersBlocContext extends BlocContextBase<OrdersCubit> {
+class CheckoutBlocContext extends BlocContextBase<CheckoutCubit> {
 
   AppRouterDelegate router;
 
-  OrdersBlocContext(this.router);
+  CheckoutBlocContext(this.router);
 
   @override
-  void subscribe(OrdersCubit bloc, BuildContext context) {
+  void subscribe(CheckoutCubit bloc, BuildContext context) {
     bloc.outEvents.listen((BlocEvent<void> event) {
       // switch (event.type) {
       //   case LoginBlocEvent.signup:

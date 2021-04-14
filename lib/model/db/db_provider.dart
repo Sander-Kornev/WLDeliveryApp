@@ -97,6 +97,15 @@ class DBProvider {
 
     await batch.commit();
   }
+
+  Future<T?> findById<T>(int id, String table, T Function(Map) fromJson) async {
+    List<Map>? maps = await db.query(
+        table, where: '$columnId = ?', whereArgs: [id]);
+    if (maps.isNotEmpty) {
+      return maps.map((info) => fromJson(info)).toList().first;
+    }
+    return null;
+  }
 }
 
 extension BatchExtension on Batch {

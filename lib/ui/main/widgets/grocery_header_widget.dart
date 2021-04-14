@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wl_delivery/model/db/models/grocery_cafe.dart';
 import 'package:wl_delivery/extensions/string_extension.dart';
 import 'package:wl_delivery/extensions/optional.dart';
+import 'package:wl_delivery/extensions/double_extension.dart';
 
 class GroceryHeaderWidget extends StatelessWidget {
   const GroceryHeaderWidget({
@@ -92,7 +93,7 @@ class GroceryHeaderWidget extends StatelessWidget {
                                     .orEmpty
                             ),
                             Text(
-                                'Delivery fee: ${grocery.deliveryPrice} \$'
+                                'Delivery fee: ${grocery.deliveryPrice.toCurrency}'
                             ),
                           ],
                         )

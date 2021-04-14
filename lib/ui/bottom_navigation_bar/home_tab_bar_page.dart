@@ -1,11 +1,15 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:wl_delivery/model/logic/cart.dart';
 import 'package:wl_delivery/router/bloc_common/bloc_provider.dart';
 import 'package:wl_delivery/router/router_delegate.dart';
-import 'package:wl_delivery/ui/cart/cart_bloc_context.dart';
-import 'package:wl_delivery/ui/cart/cart_cubit.dart';
-import 'package:wl_delivery/ui/cart/cart_sceen.dart';
+import 'package:wl_delivery/ui/bottom_navigation_bar/home_tab_bar_cubit.dart';
+import 'package:wl_delivery/ui/cart/user_cart/cart_bloc_context.dart';
+import 'package:wl_delivery/ui/cart/user_cart/cart_cubit.dart';
+import 'package:wl_delivery/ui/cart/user_cart/cart_sceen.dart';
 import 'package:wl_delivery/ui/main/restaurants/main_bloc_context.dart';
 import 'package:wl_delivery/ui/main/restaurants/main_cubit.dart';
 import 'package:wl_delivery/ui/main/restaurants/main_screen.dart';
@@ -17,13 +21,14 @@ import 'package:wl_delivery/ui/profile/profile/profile_bloc_context.dart';
 import 'package:wl_delivery/ui/profile/profile/profile_cubit.dart';
 
 // Main Screen
-class MyHomePage extends StatefulWidget {
+class HomeTabBarPage extends StatefulWidget {
 
   final AppRouterDelegate routerDelegate;
+  final cart = Get.find<Cart>();
 
   late final List<Widget> screens;
 
-  MyHomePage(this.routerDelegate) {
+  HomeTabBarPage(this.routerDelegate) {
     screens = [
       BlocProviderObj(
           child: MainScreen(),
@@ -45,10 +50,10 @@ class MyHomePage extends StatefulWidget {
   }
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomeTabBarPage createState() => _HomeTabBarPage();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeTabBarPage extends State<HomeTabBarPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
             activeColor: Colors.red,
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Main'),
-              BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: 'Cart'),
+              BottomNavigationBarItem(
+                icon: BlocBuilder<HomeTabBarCubit, int>(builder: (context, state) {
+                  return badgeIcon(Icon(Icons.shopping_cart_outlined), state);
+                }) ,
+                label: 'Cart',
+              ),
               BottomNavigationBarItem(icon: Icon(Icons.format_list_bulleted), label: 'Orders'),
               BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile')
             ],
@@ -67,5 +77,39 @@ class _MyHomePageState extends State<MyHomePage> {
             return widget.screens[index];
           }),
     );
+  }
+
+  Widget badgeIcon(Icon icon, int count) {
+    if (count > 0) {
+      return Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          icon,
+          Positioned(
+              top: 0,
+              right: -10,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minWidth: 20, minHeight: 20),
+                child: Container(
+                  decoration: ShapeDecoration(
+                      shape: StadiumBorder(),
+                      color: Colors.red),
+                  child: Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: Center(
+                      child: Text(
+                        count.toString(),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+              ))
+        ],
+      );
+    } else {
+      return icon;
+    }
   }
 }

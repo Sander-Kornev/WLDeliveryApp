@@ -51,4 +51,12 @@ class GroceryCafe extends SQLModelInsertable {
     openTime = map[columnOpenTime] as String;
     status = map[columnStatus] as String;
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GroceryCafe && id == other.id;
+  }
+
+  @override
+  int get hashCode => id;
 }

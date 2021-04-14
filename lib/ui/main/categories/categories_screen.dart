@@ -55,13 +55,16 @@ class CategoriesScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                value.title.orEmpty,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black),
+                              Flexible(
+                                child: Text(
+                                  value.title.orEmpty,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black),
+                                ),
                               ),
+                              SizedBox(width: 10,),
                               Container(
                                 width: 70,
                                 height: 70,

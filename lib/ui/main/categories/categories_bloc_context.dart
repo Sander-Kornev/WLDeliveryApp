@@ -35,7 +35,7 @@ class CategoriesBlocContext extends BlocContextBase<CategoriesCubit> {
           router.pushWidget(BlocProviderObj(
             child: ProductsScreen(),
             bloc: ProductsCubit(event.parameters![GroceryCafe.staticTableName] as GroceryCafe, event.parameters![Category.staticTableName] as Category),
-            blocContext: ProoductsBlocContext(router),
+            blocContext: ProductsBlocContext(router),
           ), CategoriesPageConfig);
           break;
         default:

@@ -46,7 +46,8 @@ class APIManager {
     _printRequest(response.request);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      final mapValue = jsonDecode(response.body);
+      final result = Utf8Codec().decode(response.bodyBytes);
+      final mapValue = jsonDecode(result);
       if (request.containsAuthInfo) {
         authReceivedDelegate.authInfoReceived(mapValue);
       }

@@ -39,6 +39,13 @@ abstract class BlocBaseObj<T, P> extends BlocBase<T> {
 
   Stream<String> get outMessageEvents => _messageController.stream;
 
+  StreamController<MessageAlert> _messageAlertController = StreamController<MessageAlert>();
+
+  @protected
+  Sink<MessageAlert> get inMessageAlertEvents => _messageAlertController.sink;
+
+  Stream<MessageAlert> get outMessageAlertEvents => _messageAlertController.stream;
+
   StreamController<TextMessageAlert> _textAlertController = StreamController<
       TextMessageAlert>();
 
@@ -63,5 +70,6 @@ abstract class BlocBaseObj<T, P> extends BlocBase<T> {
     _messageController.close();
     _textAlertController.close();
     _modalController.close();
+    _messageAlertController.close();
   }
 }

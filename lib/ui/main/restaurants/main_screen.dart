@@ -5,6 +5,7 @@ import 'package:wl_delivery/model/db/models/grocery_cafe.dart';
 import 'package:wl_delivery/ui/common/list_state.dart';
 import 'package:wl_delivery/ui/main/restaurants/main_cubit.dart';
 import 'package:wl_delivery/extensions/optional.dart';
+import 'package:wl_delivery/extensions/double_extension.dart';
 import 'package:wl_delivery/extensions/string_extension.dart';
 
 class MainScreen extends StatelessWidget {
@@ -84,7 +85,7 @@ class MainScreen extends StatelessWidget {
                                                 Text(value.openTime.orEmpty)
                                               ],
                                             ),
-                                            Text('Delivery fee: ${value.deliveryPrice} \$'),
+                                            Text('Delivery fee: ${value.deliveryPrice.toCurrency}'),
                                           ],
                                         )
                                       ],

@@ -2,8 +2,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:wl_delivery/ui/bottom_navigation_bar/my_navigation_bar.dart';
+import 'package:wl_delivery/ui/bottom_navigation_bar/home_tab_bar_cubit.dart';
+import 'package:wl_delivery/ui/bottom_navigation_bar/home_tab_bar_page.dart';
+import 'package:wl_delivery/ui/cart/checkout/checkout_bloc_context.dart';
+import 'package:wl_delivery/ui/cart/checkout/checkout_cubit.dart';
+import 'package:wl_delivery/ui/cart/checkout/checkout_sceen.dart';
 import 'package:wl_delivery/ui/login/login.dart';
 import 'package:wl_delivery/ui/login/login_bloc_context.dart';
 import 'package:wl_delivery/ui/login/login_cubit.dart';
@@ -124,7 +129,10 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
               SignupPageConfig);
           break;
         case Pages.NavigationBar:
-          _addPageData(MyHomePage(this), NavigationBarPageConfig);
+          _addPageData(BlocProvider(
+            create: (_) => HomeTabBarCubit(),
+            child: HomeTabBarPage(this),
+          ), NavigationBarPageConfig);
           break;
         case Pages.EditProfile:
           _addPageData(
@@ -150,6 +158,16 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
                 child: ChangePassword(),
                 bloc: ChangePasswordCubit(),
                 blocContext: ChangePasswordContext(this),
+              ),
+              ChangePasswordPageConfig);
+          break;
+
+        case Pages.Checkout:
+          _addPageData(
+              BlocProviderObj(
+                child: CheckoutScreen(),
+                bloc: CheckoutCubit(),
+                blocContext: CheckoutBlocContext(this),
               ),
               ChangePasswordPageConfig);
           break;

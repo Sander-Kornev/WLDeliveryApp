@@ -7,11 +7,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
 import 'package:wl_delivery/model/db/db_provider.dart';
 import 'package:wl_delivery/model/db/models/user.dart';
+import 'package:wl_delivery/model/repository/cart_repository.dart';
 import 'package:wl_delivery/router/back_dispatcher.dart';
 import 'package:wl_delivery/router/route_parser.dart';
 import 'package:wl_delivery/router/router_delegate.dart';
 import 'package:wl_delivery/router/ui_pages.dart';
 import 'package:wl_delivery/model/repository/auth_repository.dart';
+
+import 'model/logic/cart.dart';
 
 const String boxName = "db";
 
@@ -54,6 +57,11 @@ class _MyAppState extends State<MyApp> {
     Get.put(authRepository);
     delegate.setNewRoutePath(SplashPageConfig);
     Get.put(delegate);
+
+    final cart = Cart(authRepository, CartRepository());
+    Get.put(cart);
+
+    authRepository.cart = cart;
   }
 
   @override

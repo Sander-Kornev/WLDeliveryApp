@@ -1,7 +1,4 @@
 
-
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
@@ -15,7 +12,7 @@ class SignupContextBase extends BlocContextBase<SignupCubit> {
   void subscribe(SignupCubit bloc, BuildContext context) {}
 }
 
-class SignupCubit extends BlocBaseObj<SignupState, Void> {
+class SignupCubit extends BlocBaseObj<SignupState, void> {
 
   final authRepository = Get.find<AuthRepository>();
   final apiManager = Get.find<APIManager>();

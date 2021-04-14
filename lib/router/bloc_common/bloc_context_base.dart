@@ -17,6 +17,19 @@ class TextMessageAlert {
   TextMessageAlert(this.textFields, this.title, this.message, this.okLabel, this.completion);
 }
 
+class MessageAlert<T> {
+  String title;
+  String? message;
+
+  void Function(T) completion;
+
+  //     String? okLabel,
+  // String? cancelLabel,
+  List<AlertDialogAction<T>> actions;
+
+  MessageAlert(this.title, this.message, this.actions, this.completion);
+}
+
 abstract class BlocContextBase<T extends BlocBase> {
 
   // обязательный к реализации метод
@@ -56,6 +69,18 @@ abstract class BlocContextBase<T extends BlocBase> {
           title: message,
           okLabel: 'Ok'
       );
+    });
+  }
+
+  void subscribeConfirmationMessage(T bloc, BuildContext context) {
+    (bloc as BlocBaseObj).outMessageAlertEvents.listen((MessageAlert alert) async {
+      final results = await showAlertDialog(
+          context: context,
+          title: alert.title,
+          actions: alert.actions,
+          message: alert.message
+      );
+      alert.completion(results);
     });
   }
 

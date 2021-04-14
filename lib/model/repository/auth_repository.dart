@@ -7,6 +7,7 @@ import 'package:wl_delivery/model/api/APIRequest/requests/request+auth.dart';
 import 'package:wl_delivery/model/api/APIRequest/requests/request+user.dart';
 import 'package:wl_delivery/model/db/models/user.dart';
 import 'package:wl_delivery/model/logic/auth_store.dart';
+import 'package:wl_delivery/model/logic/cart.dart';
 
 const String boxName = "db";
 
@@ -23,6 +24,7 @@ abstract class AuthRepositoryProtocol {
 class AuthRepository extends Cubit<AuthState> with AuthRepositoryProtocol {
 
   late APIManager apiManager;
+  late Cart cart;
   final authStore = AuthStore();
 
   AuthRepository(): super(UnknownAuthState());
@@ -66,6 +68,7 @@ class AuthRepository extends Cubit<AuthState> with AuthRepositoryProtocol {
   logout() async {
     _deleteUser();
     authStore.logout();
+    cart.clearCart();
   }
 
   Future<String?> get accessToken async {
