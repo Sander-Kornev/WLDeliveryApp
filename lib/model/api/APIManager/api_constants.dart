@@ -5,4 +5,5 @@ class APIConstants {
   static const clientSecret = "akZKYl2wsAsbLYbOIPDg863McNfzJskww2VPrTsbWMIdudgN3qhyg25PnuG2nlIL9tafAqEeqsb0g33MVPZeE9EZxeYJWKQcI5QvCM5bkN4jwv9s0WLSCLqtLnxTL4T4";
 
   static const baseUrl = 'http://wlapp.itcraftlab.com:1337/';
+  static const googleApiKey = 'AIzaSyAfQlK8layRMomwa9iMYe5LQrWhXzey5gQ';
 }

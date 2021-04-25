@@ -19,21 +19,13 @@ class Destination {
   });
 
   Map get apiJSON {
-    // let formatter = NumberFormatter()
-    // formatter.numberStyle =
-    // .decimal
-    // formatter.maximumFractionDigits = 6
-    // formatter.decimalSeparator = "."
-
     return {
       "address": address,
       "entrance": entrance.orEmpty,
       "floor": floor.orEmpty,
       "apartment": apartment.orEmpty,
-      "latitude": 0,//formatter
-          // .string(from: NSNumber(value: latitude))
-          // .orEmpty,
-      "longitude": 0//formatter.string(from: NSNumber(value: longitude)
+      "latitude": latitude.toStringAsFixed(6),
+      "longitude": longitude.toStringAsFixed(6)
     };
   }
 

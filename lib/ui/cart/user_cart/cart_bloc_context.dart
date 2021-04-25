@@ -14,7 +14,7 @@ class CartBlocContext extends BlocContextBase<CartCubit> {
 
   @override
   void subscribe(CartCubit bloc, BuildContext context) {
-    bloc.outEvents.listen((BlocEvent<CartCubitEvent> event) {
+    bloc.outEvents.listen((BlocEvent<dynamic> event) {
       switch (event.type) {
         case CartCubitEvent.checkout:
           router.push(CheckoutPageConfig);

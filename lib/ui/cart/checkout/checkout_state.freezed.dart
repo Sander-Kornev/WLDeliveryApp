@@ -17,10 +17,12 @@ class _$CheckoutStateTearOff {
   const _$CheckoutStateTearOff();
 
   _CheckoutState call(
-      {String? addressValidationError,
+      {String? addressValue,
+      String? addressValidationError,
       String? phoneValidationError,
       required PaymentOption paymentOption}) {
     return _CheckoutState(
+      addressValue: addressValue,
       addressValidationError: addressValidationError,
       phoneValidationError: phoneValidationError,
       paymentOption: paymentOption,
@@ -33,6 +35,7 @@ const $CheckoutState = _$CheckoutStateTearOff();
 
 /// @nodoc
 mixin _$CheckoutState {
+  String? get addressValue => throw _privateConstructorUsedError;
   String? get addressValidationError => throw _privateConstructorUsedError;
   String? get phoneValidationError => throw _privateConstructorUsedError;
   PaymentOption get paymentOption => throw _privateConstructorUsedError;
@@ -48,7 +51,8 @@ abstract class $CheckoutStateCopyWith<$Res> {
           CheckoutState value, $Res Function(CheckoutState) then) =
       _$CheckoutStateCopyWithImpl<$Res>;
   $Res call(
-      {String? addressValidationError,
+      {String? addressValue,
+      String? addressValidationError,
       String? phoneValidationError,
       PaymentOption paymentOption});
 }
@@ -64,11 +68,16 @@ class _$CheckoutStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? addressValue = freezed,
     Object? addressValidationError = freezed,
     Object? phoneValidationError = freezed,
     Object? paymentOption = freezed,
   }) {
     return _then(_value.copyWith(
+      addressValue: addressValue == freezed
+          ? _value.addressValue
+          : addressValue // ignore: cast_nullable_to_non_nullable
+              as String?,
       addressValidationError: addressValidationError == freezed
           ? _value.addressValidationError
           : addressValidationError // ignore: cast_nullable_to_non_nullable
@@ -93,7 +102,8 @@ abstract class _$CheckoutStateCopyWith<$Res>
       __$CheckoutStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? addressValidationError,
+      {String? addressValue,
+      String? addressValidationError,
       String? phoneValidationError,
       PaymentOption paymentOption});
 }
@@ -111,11 +121,16 @@ class __$CheckoutStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? addressValue = freezed,
     Object? addressValidationError = freezed,
     Object? phoneValidationError = freezed,
     Object? paymentOption = freezed,
   }) {
     return _then(_CheckoutState(
+      addressValue: addressValue == freezed
+          ? _value.addressValue
+          : addressValue // ignore: cast_nullable_to_non_nullable
+              as String?,
       addressValidationError: addressValidationError == freezed
           ? _value.addressValidationError
           : addressValidationError // ignore: cast_nullable_to_non_nullable
@@ -135,11 +150,14 @@ class __$CheckoutStateCopyWithImpl<$Res>
 /// @nodoc
 class _$_CheckoutState extends _CheckoutState with DiagnosticableTreeMixin {
   _$_CheckoutState(
-      {this.addressValidationError,
+      {this.addressValue,
+      this.addressValidationError,
       this.phoneValidationError,
       required this.paymentOption})
       : super._();
 
+  @override
+  final String? addressValue;
   @override
   final String? addressValidationError;
   @override
@@ -149,7 +167,7 @@ class _$_CheckoutState extends _CheckoutState with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CheckoutState(addressValidationError: $addressValidationError, phoneValidationError: $phoneValidationError, paymentOption: $paymentOption)';
+    return 'CheckoutState(addressValue: $addressValue, addressValidationError: $addressValidationError, phoneValidationError: $phoneValidationError, paymentOption: $paymentOption)';
   }
 
   @override
@@ -157,6 +175,7 @@ class _$_CheckoutState extends _CheckoutState with DiagnosticableTreeMixin {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'CheckoutState'))
+      ..add(DiagnosticsProperty('addressValue', addressValue))
       ..add(
           DiagnosticsProperty('addressValidationError', addressValidationError))
       ..add(DiagnosticsProperty('phoneValidationError', phoneValidationError))
@@ -167,6 +186,9 @@ class _$_CheckoutState extends _CheckoutState with DiagnosticableTreeMixin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _CheckoutState &&
+            (identical(other.addressValue, addressValue) ||
+                const DeepCollectionEquality()
+                    .equals(other.addressValue, addressValue)) &&
             (identical(other.addressValidationError, addressValidationError) ||
                 const DeepCollectionEquality().equals(
                     other.addressValidationError, addressValidationError)) &&
@@ -181,6 +203,7 @@ class _$_CheckoutState extends _CheckoutState with DiagnosticableTreeMixin {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(addressValue) ^
       const DeepCollectionEquality().hash(addressValidationError) ^
       const DeepCollectionEquality().hash(phoneValidationError) ^
       const DeepCollectionEquality().hash(paymentOption);
@@ -193,11 +216,14 @@ class _$_CheckoutState extends _CheckoutState with DiagnosticableTreeMixin {
 
 abstract class _CheckoutState extends CheckoutState {
   factory _CheckoutState(
-      {String? addressValidationError,
+      {String? addressValue,
+      String? addressValidationError,
       String? phoneValidationError,
       required PaymentOption paymentOption}) = _$_CheckoutState;
   _CheckoutState._() : super._();
 
+  @override
+  String? get addressValue => throw _privateConstructorUsedError;
   @override
   String? get addressValidationError => throw _privateConstructorUsedError;
   @override

@@ -171,6 +171,15 @@ class AppRouterDelegate extends RouterDelegate<PageConfiguration>
               ),
               ChangePasswordPageConfig);
           break;
+        // case Pages.SearchAddress:
+        //   _addPageData(
+        //     BlocProvider(
+        //         create: (_) => SearchAddressCubit(),
+        //         child: SearchAddressPage()
+        //     ),
+        //       ChangePasswordPageConfig
+        //   );
+        //   break;
 
         default:
           break;

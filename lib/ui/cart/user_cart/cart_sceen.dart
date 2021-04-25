@@ -42,8 +42,7 @@ class CartScreen extends StatelessWidget {
               final loadedState = state as Data;
               return Column(
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height - 350,
+                  Expanded(
                     child: ListView.separated(
                       itemCount: loadedState.values.length + 1,
                       itemBuilder: (context, index) {
@@ -78,43 +77,50 @@ class CartScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  Divider(height: 2, thickness: 2),
-                  SizedBox(height: 10,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  IntrinsicHeight(
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Subtotal'),
-                            Text(mainCubit.subtotal.orEmpty),
-                          ],
-                        ),
+                        Divider(height: 2, thickness: 2),
                         SizedBox(height: 10,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Delivery Fee'),
-                            Text(mainCubit.deliveryFee.orEmpty),
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),),
-                            Text(mainCubit.total.orEmpty, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),),
-                          ],
-                        ),
-                        SizedBox(height: 10,),
-                        SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                                onPressed: mainCubit.checkoutAction,
-                                child: Text('Checkout')
-                            )
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Subtotal'),
+                                  Text(mainCubit.subtotal.orEmpty),
+                                ],
+                              ),
+                              SizedBox(height: 10,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Delivery Fee'),
+                                  Text(mainCubit.deliveryFee.orEmpty),
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Total', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),),
+                                  Text(mainCubit.total.orEmpty, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),),
+                                ],
+                              ),
+                              SizedBox(height: 10,),
+                              SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                      onPressed: mainCubit.checkoutAction,
+                                      child: Text('Checkout')
+                                  )
+                              ),
+                              SizedBox(height: 10,),
+                            ],
+                          ),
                         ),
                       ],
                     ),

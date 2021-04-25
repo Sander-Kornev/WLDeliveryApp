@@ -64,6 +64,10 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Need for testing</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>To show your current location on the map</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>To show your current location on the map</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

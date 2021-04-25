@@ -76,6 +76,7 @@ class SignupForm extends StatelessWidget {
                     child: BlocBuilder<CheckoutCubit, CheckoutState>(
                         builder: (context, state) {
                       String? addressErr = state.addressValidationError;
+                      String? address = state.addressValue;
                       String? phoneErr = state.phoneValidationError;
 
                       return Column(
@@ -84,12 +85,13 @@ class SignupForm extends StatelessWidget {
                           TextFormField(
                             decoration: InputDecoration(
                                 border: UnderlineInputBorder(),
-                                labelText: 'Address',
+                                hintText: 'Select Address',
                                 errorText: addressErr),
                             keyboardType: TextInputType.streetAddress,
                             enableSuggestions: false,
                             autocorrect: false,
-                            onChanged: cubit.setAddress,
+                            onTap: cubit.addressTap,
+                            controller: TextEditingController(text: address),
                           ),
                           Row(
                             children: [
@@ -175,8 +177,6 @@ class SignupForm extends StatelessWidget {
                   padding: const EdgeInsets.all(20.0),
                   child: BlocBuilder<CheckoutCubit, CheckoutState>(
                       builder: (context, state) {
-                        String? addressErr = state.addressValidationError;
-                        String? phoneErr = state.phoneValidationError;
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -10,6 +10,7 @@ const String SettingsPath = '/settings';
 const String CategoriesPath = '/categories';
 const String ProductsPath = '/products';
 const String CheckoutPath = '/checkout';
+const String SearchAddressPath = '/searchAddress';
 
 enum Pages {
   Splash,
@@ -22,7 +23,8 @@ enum Pages {
 
   Categories,
   Products,
-  Checkout
+  Checkout,
+  SearchAddress
 }
 
 class PageConfiguration {
@@ -55,3 +57,5 @@ const PageConfiguration ProductsPageConfig = PageConfiguration(
     key: 'Products', path: ProductsPath, uiPage: Pages.Products);
 const PageConfiguration CheckoutPageConfig = PageConfiguration(
     key: 'Checkout', path: CheckoutPath, uiPage: Pages.Checkout);
+const PageConfiguration SearchAddressPageConfig = PageConfiguration(
+    key: 'SearchAddress', path: SearchAddressPath, uiPage: Pages.SearchAddress);

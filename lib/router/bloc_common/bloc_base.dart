@@ -1,16 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 
 import 'bloc_context_base.dart';
 
-class BlocEvent<T> {
-  T type;
+class BlocEvent<P> {
+  P type;
   Map<String, dynamic>? parameters;
+  Completer<dynamic>? completer;
 
-  BlocEvent({required this.type, this.parameters});
+  BlocEvent({required this.type, this.parameters, this.completer});
 }
 
 // Generic Interface for all BLoCs

@@ -22,9 +22,15 @@ class APIManager {
 
     if (request.isWithToken) {
       final token = await authReceivedDelegate.accessToken;
-      headers[HttpHeaders.authorizationHeader] = "Bearer $token";
+      headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
     } else if (request.credentials != null) {
       headers[HttpHeaders.authorizationHeader] = _basicAuthHeader(request.credentials!);
+    }
+
+    if ([APIRequestType.POST, APIRequestType.PUT].contains(request.httpMethod)) {
+      if (request.encoding == APIEncoding.json) {
+        headers['Content-Type'] = 'application/json';
+      }
     }
 
     String queryString = Uri(queryParameters: request.getParameters).query;
@@ -37,13 +43,22 @@ class APIManager {
         response = await http.get(endpoint, headers: headers);
         break;
       case APIRequestType.POST:
-        response = await http.post(endpoint, headers: headers, body: request.postParameters);
+        dynamic body = request.postParameters;
+        if (request.encoding == APIEncoding.json) {
+          body = jsonEncode(request.postParameters);
+        }
+        response = await http.post(endpoint, headers: headers, body: body);
         break;
       case APIRequestType.PUT:
-        response = await http.put(endpoint, headers: headers, body: request.postParameters);
+        dynamic body = request.postParameters;
+        if (request.encoding == APIEncoding.json) {
+          body = jsonEncode(request.postParameters);
+        }
+        response = await http.put(endpoint, headers: headers, body: body);
         break;
     }
     _printRequest(response.request);
+    // _printRequest(response.request._body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final result = Utf8Codec().decode(response.bodyBytes);

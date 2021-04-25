@@ -15,7 +15,8 @@ class CheckoutState with _$CheckoutState  {
 
   const CheckoutState._(); // Added constructor
   factory CheckoutState(
-      {String? addressValidationError,
+      {String? addressValue,
+        String? addressValidationError,
         String? phoneValidationError,
         required PaymentOption paymentOption}) = _CheckoutState;
 

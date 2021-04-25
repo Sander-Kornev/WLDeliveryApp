@@ -1,4 +1,7 @@
 
+import 'dart:async';
+
+import 'package:wl_delivery/helper/location/geocoding_manager.dart';
 import 'package:wl_delivery/model/api/APIManager/api_manager.dart';
 import 'package:wl_delivery/model/api/APIRequest/requests/request+order.dart';
 import 'package:wl_delivery/model/db/models/grocery_cafe.dart';
@@ -11,17 +14,21 @@ import 'package:get/get.dart';
 import 'package:wl_delivery/ui/cart/checkout/checkout_state.dart';
 import 'package:wl_delivery/extensions/optional.dart';
 
-class CheckoutCubit extends BlocBaseObj<CheckoutState, void> {
+enum CheckoutCubitEvent {
+  selectAddress
+}
+
+class CheckoutCubit extends BlocBaseObj<CheckoutState, CheckoutCubitEvent> {
 
   final cart = Get.find<Cart>();
   final apiManager = Get.find<APIManager>();
   GroceryCafe? get grocery { return cart.currentShop; }
 
-  String? _address;
   String? _phoneNumber;
   String? _entrance;
   String? _floor;
   String? _apartment;
+  LocationItem? _locationItem;
 
   String? get total => (cart.subtotalPrice + (grocery?.deliveryPrice ?? 0)).toCurrency;
   bool get byCard => state.paymentOption == PaymentOption.card;
@@ -36,10 +43,15 @@ class CheckoutCubit extends BlocBaseObj<CheckoutState, void> {
 
   CheckoutCubit(): super(CheckoutState(paymentOption: PaymentOption.cash));
 
-  setAddress(String? value) {
-    _address = value;
-    var newState = state.copyWith(addressValidationError: null);
-    emit(newState);
+  addressTap() async {
+    Completer<LocationItem> completer = Completer();
+    inEvents.add(BlocEvent(type: CheckoutCubitEvent.selectAddress, completer: completer));
+    try {
+      _locationItem = await completer.future;
+      emit(state.copyWith(addressValue: _locationItem!.mainText));
+    } catch (err) {
+      print(err);
+    }
   }
 
   setPhoneNumber(String? value) {
@@ -69,7 +81,7 @@ class CheckoutCubit extends BlocBaseObj<CheckoutState, void> {
   }
 
   checkoutAction() async {
-    final addressError = _validateAddress(_address);
+    final addressError = _validateAddress(_locationItem);
     final phoneError = _validatePhone(_phoneNumber);
 
     if (addressError != null ||
@@ -85,12 +97,12 @@ class CheckoutCubit extends BlocBaseObj<CheckoutState, void> {
     try {
       inLoadingEvents.add(true);
       final destination = Destination(
-          address: _address!,
+          address: _locationItem!.mainText,
           entrance: _entrance,
           apartment: _apartment,
           floor: _floor,
-          latitude: 0,
-          longitude: 0
+          latitude: _locationItem!.latitude!,
+          longitude: _locationItem!.longitude!
       );
       final preorderModel = PreorderModel(
           establishment: cart.currentShop!,
@@ -102,6 +114,7 @@ class CheckoutCubit extends BlocBaseObj<CheckoutState, void> {
       );
       final request = OrdersAPI.createOrder(preorderModel);
       final response = await apiManager.performRequest(request);
+      print(response);
       inLoadingEvents.add(false);
     } catch (err) {
       print(err.toString());
@@ -110,8 +123,8 @@ class CheckoutCubit extends BlocBaseObj<CheckoutState, void> {
     }
   }
 
-  String? _validateAddress(String? value) {
-    return value?.isNotEmpty == true
+  String? _validateAddress(LocationItem? value) {
+    return value != null && value.latitude != null && value.longitude != null
         ? null
         : "Address shouldn't be empty.";
   }
