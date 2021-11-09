@@ -32,7 +32,7 @@ dependencies:
   adaptive_dialog: ^0.10.0+5
   freezed_annotation: ^0.14.1
   flutter_facebook_auth: ^3.3.1+1
-  sign_in_with_apple: ^3.0.0
+  sign_in_with_apple: ^3.2.0
   modal_bottom_sheet: ^2.0.0
   sqflite: ^2.0.0+3
 
@@ -44,9 +44,9 @@ dependencies:
   material_floating_search_bar: ^0.3.4
 
   location: ^4.1.1
-  geocoding: ^2.0.0
+  geocoding: ^2.0.1
 
-  google_maps_flutter: ^2.0.3
+  google_maps_flutter: ^2.1.0
   flutter_google_places_api:
     git:
       url: https://github.com/bamnenim/flutter_google_places_api
